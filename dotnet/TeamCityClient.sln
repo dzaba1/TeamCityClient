@@ -9,12 +9,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		Directory.Packages.props = Directory.Packages.props
 		..\.github\workflows\dotnet.yml = ..\.github\workflows\dotnet.yml
-		..\README.md = ..\README.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.TeamCityClient", "src\Dzaba.TeamCityClient\Dzaba.TeamCityClient.csproj", "{0331992E-C931-4A82-B15C-68632E2870F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.TeamCityClient.Tests", "src\Dzaba.TeamCityClient.Tests\Dzaba.TeamCityClient.Tests.csproj", "{F9EA26D7-CD14-44CD-B7A9-85E79EE13CE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.TeamCityClient.Tests", "src\Dzaba.TeamCityClient.Tests\Dzaba.TeamCityClient.Tests.csproj", "{F9EA26D7-CD14-44CD-B7A9-85E79EE13CE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
