@@ -3,14 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.TeamCityClient.ClassGen", "src\Dzaba.TeamCityClient.ClassGen\Dzaba.TeamCityClient.ClassGen.csproj", "{3F86D332-3746-4F83-BD3E-C492C3886ACC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.TeamCityClient.ClassGen", "src\Dzaba.TeamCityClient.ClassGen\Dzaba.TeamCityClient.ClassGen.csproj", "{3F86D332-3746-4F83-BD3E-C492C3886ACC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C33914FC-D5D2-4021-8C19-FF3D6EF71910}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.TeamCityClient", "src\Dzaba.TeamCityClient\Dzaba.TeamCityClient.csproj", "{0331992E-C931-4A82-B15C-68632E2870F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dzaba.TeamCityClient", "src\Dzaba.TeamCityClient\Dzaba.TeamCityClient.csproj", "{0331992E-C931-4A82-B15C-68632E2870F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dzaba.TeamCityClient.Tests", "src\Dzaba.TeamCityClient.Tests\Dzaba.TeamCityClient.Tests.csproj", "{F9EA26D7-CD14-44CD-B7A9-85E79EE13CE6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +28,10 @@ Global
 		{0331992E-C931-4A82-B15C-68632E2870F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0331992E-C931-4A82-B15C-68632E2870F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0331992E-C931-4A82-B15C-68632E2870F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9EA26D7-CD14-44CD-B7A9-85E79EE13CE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9EA26D7-CD14-44CD-B7A9-85E79EE13CE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9EA26D7-CD14-44CD-B7A9-85E79EE13CE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9EA26D7-CD14-44CD-B7A9-85E79EE13CE6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
