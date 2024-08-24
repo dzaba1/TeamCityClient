@@ -1,0 +1,28 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Authors>dzaba1</Authors>
+    <RepositoryUrl>https://github.com/dzaba1/TeamCityClient</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <WarningsAsErrors>CS1591</WarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+  </ItemGroup>
+  <Target Name="UseExplicitPackageVersions" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_ProjectReferenceWithExplicitPackageVersion Include="@(ProjectReference->'%(FullPath)')" Condition="'%(ProjectReference.PackageVersion)' != ''" />
+      <_ProjectReferenceWithExactPackageVersion Include="@(ProjectReference->'%(FullPath)')" Condition="'%(ProjectReference.ExactVersion)' == 'true'" />
+      <_ProjectReferenceWithReassignedVersion Include="@(_ProjectReferencesWithVersions)" Condition="'%(Identity)' != '' And '@(_ProjectReferenceWithExplicitPackageVersion)' == '@(_ProjectReferencesWithVersions)'">
+        <ProjectVersion>@(_ProjectReferenceWithExplicitPackageVersion->'%(PackageVersion)')</ProjectVersion>
+      </_ProjectReferenceWithReassignedVersion>
+      <_ProjectReferenceWithReassignedVersion Include="@(_ProjectReferencesWithVersions)" Condition="'%(Identity)' != '' And '@(_ProjectReferenceWithExactPackageVersion)' == '@(_ProjectReferencesWithVersions)'">
+        <ProjectVersion>[@(_ProjectReferencesWithVersions->'%(ProjectVersion)')]</ProjectVersion>
+      </_ProjectReferenceWithReassignedVersion>
+      <_ProjectReferencesWithVersions Remove="@(_ProjectReferenceWithReassignedVersion)" />
+      <_ProjectReferencesWithVersions Include="@(_ProjectReferenceWithReassignedVersion)" />
+    </ItemGroup>
+  </Target>
+</Project>
