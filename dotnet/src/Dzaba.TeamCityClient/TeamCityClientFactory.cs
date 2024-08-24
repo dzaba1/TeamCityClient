@@ -35,7 +35,8 @@ internal sealed class TeamCityClientFactory : ITeamCityClientFactory
     {
         ArgumentNullException.ThrowIfNull(options, nameof(options));
 
-        return new Model.TeamCityClient(httpClientManager.HttpClient, loggerFactory.CreateLogger<Model.TeamCityClient>(), options.Token)
+        var httpClient = httpClientManager.GetClient(options.Policy, options.Url);
+        return new Model.TeamCityClient(httpClient, loggerFactory.CreateLogger<Model.TeamCityClient>(), options.Token)
         {
             BaseUrl = options.Url.ToString()
         };

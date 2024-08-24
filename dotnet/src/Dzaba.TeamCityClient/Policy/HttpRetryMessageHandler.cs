@@ -1,23 +1,34 @@
-﻿namespace Dzaba.TeamCityClient.Policy;
+﻿using Polly;
+
+namespace Dzaba.TeamCityClient.Policy;
 
 internal sealed class HttpRetryMessageHandler : DelegatingHandler
 {
-    private readonly IHttpPolicy policy;
+    private readonly Lazy<IAsyncPolicy<HttpResponseMessage>> policy;
 
     public HttpRetryMessageHandler(HttpClientHandler handler,
-        IHttpPolicy policy)
+        IHttpPolicyBuilder policyBuilder,
+        PolicySettings policySettings,
+        string url)
         : base(handler)
     {
-        ArgumentNullException.ThrowIfNull(policy, nameof(policy));
+        ArgumentNullException.ThrowIfNull(policyBuilder, nameof(policyBuilder));
 
-        this.policy = policy;
+        policy = new Lazy<IAsyncPolicy<HttpResponseMessage>>(() => policyBuilder.Build(policySettings, url));
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        return await policy.RunAsync(() => base.SendAsync(request, cancellationToken))
+        if (policy.Value == null)
+        {
+            return await base.SendAsync(request, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        return await policy.Value.ExecuteAsync(async () => await base.SendAsync(request, cancellationToken)
+                .ConfigureAwait(false))
             .ConfigureAwait(false);
     }
 }

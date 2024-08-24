@@ -16,7 +16,7 @@ public static class Bootstrapper
     {
         ArgumentNullException.ThrowIfNull(services, nameof(services));
 
-        services.AddSingleton<IHttpPolicy, HttpPolicy>();
+        services.AddTransient<IHttpPolicyBuilder, HttpPolicyBuilder>();
         services.AddSingleton<ITeamCityHttpClientManager, TeamCityHttpClientManager>();
         services.AddTransient<ITeamCityClientFactory, TeamCityClientFactory>();
     }

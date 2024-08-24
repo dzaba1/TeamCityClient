@@ -3,30 +3,31 @@ using Polly;
 
 namespace Dzaba.TeamCityClient.Policy;
 
-internal interface IHttpPolicy
+internal interface IHttpPolicyBuilder
 {
-    Task<HttpResponseMessage> RunAsync(Func<Task<HttpResponseMessage>> action);
+    IAsyncPolicy<HttpResponseMessage> Build(PolicySettings settings, string url);
 }
 
-internal sealed class HttpPolicy : IHttpPolicy
+internal sealed class HttpPolicyBuilder : IHttpPolicyBuilder
 {
-    private readonly ILogger<HttpPolicy> logger;
-    private readonly Lazy<IAsyncPolicy<HttpResponseMessage>> policy;
-    private readonly PolicySettings policySettings;
+    private readonly ILogger<HttpPolicyBuilder> logger;
 
-    public HttpPolicy(ILogger<HttpPolicy> logger, PolicySettings policySettings)
+    public HttpPolicyBuilder(ILogger<HttpPolicyBuilder> logger)
     {
         ArgumentNullException.ThrowIfNull(logger, nameof(logger));
-        ArgumentNullException.ThrowIfNull(policySettings, nameof(policySettings));
 
         this.logger = logger;
-        this.policySettings = policySettings;
+    }
 
-        policy = new Lazy<IAsyncPolicy<HttpResponseMessage>>(() =>
+    public IAsyncPolicy<HttpResponseMessage> Build(PolicySettings settings, string url)
+    {
+        if (settings == null)
         {
-            var policies = ApplyPolicies();
-            return BuildPolicy(policies);
-        });
+            return null;
+        }
+
+        var policies = ApplyPolicies(settings);
+        return BuildPolicy(policies, url);
     }
 
     private void OnRetry(DelegateResult<HttpResponseMessage> result, int count, Context context)
@@ -53,7 +54,7 @@ internal sealed class HttpPolicy : IHttpPolicy
         }
     }
 
-    private IEnumerable<IAsyncPolicy<HttpResponseMessage>> ApplyPolicies()
+    private IEnumerable<IAsyncPolicy<HttpResponseMessage>> ApplyPolicies(PolicySettings policySettings)
     {
         var policyBuilder = Polly.Policy
             .Handle<Exception>()
@@ -73,7 +74,7 @@ internal sealed class HttpPolicy : IHttpPolicy
         }
     }
 
-    private IAsyncPolicy<HttpResponseMessage> BuildPolicy(IEnumerable<IAsyncPolicy<HttpResponseMessage>> policies)
+    private IAsyncPolicy<HttpResponseMessage> BuildPolicy(IEnumerable<IAsyncPolicy<HttpResponseMessage>> policies, string url)
     {
         var policiesLocal = policies.ToArray();
         if (policiesLocal.Any())
@@ -82,23 +83,10 @@ internal sealed class HttpPolicy : IHttpPolicy
                 ? Polly.Policy.WrapAsync(policiesLocal)
                 : policiesLocal[0];
 
-            localPolicy.WithPolicyKey("HttpClient");
+            localPolicy.WithPolicyKey("HttpClient_" + url);
             return localPolicy;
         }
 
         return null;
-    }
-
-    public async Task<HttpResponseMessage> RunAsync(Func<Task<HttpResponseMessage>> action)
-    {
-        ArgumentNullException.ThrowIfNull(action, nameof(action));
-
-        if (policy.Value == null)
-        {
-            return await action().ConfigureAwait(false);
-        }
-
-        return await policy.Value.ExecuteAsync(action)
-            .ConfigureAwait(false);
     }
 }

@@ -36,7 +36,11 @@ public class ResolveTests
     {
         using var container = CreateContainer();
         var factory = container.GetRequiredService<ITeamCityClientFactory>();
-        var client = factory.CreateClient(new TeamCityClientOptions());
+        var client = factory.CreateClient(new TeamCityClientOptions
+        {
+            Url = new Uri("https://MyServer"),
+            Token = "123abc"
+        });
         client.Should().NotBeNull();
     }
 }
