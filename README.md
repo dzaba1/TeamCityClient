@@ -10,7 +10,7 @@ Install nuget
 
 Register services into IoC container:
 ```csharp
-services.RegisterDzabaTeamCityClient()
+services.RegisterDzabaTeamCityClient();
 ```
 
 Inject `ITeamCityClientFactory` into your classes and create clients:
