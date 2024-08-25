@@ -88,8 +88,12 @@ internal sealed class BuildsQueryProvider : BaseQueryProvider
     {
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
 
-        var builds = ExecuteBuilds(expression).ToArrayAsync().Result;
-        //return builds.AsQueryable().Provider.CreateQuery<T>(expression);
-        return builds.Cast<T>();
+        var builds = ExecuteBuilds(expression).ToArrayAsync().Result
+            .AsQueryable();
+
+        var treeCopier = new ExpressionTreeModifier<Build>(builds);
+        var newExpressionTree = treeCopier.Visit(expression);
+
+        return builds.Provider.CreateQuery<T>(newExpressionTree);
     }
 }
