@@ -2,7 +2,7 @@
 
 namespace Dzaba.TeamCityClient.Linq;
 
-internal abstract class BaseQueryProvider : IAsyncQueryProvider
+internal abstract class BaseQueryProvider : IQueryProvider
 {
     public IQueryable CreateQuery(Expression expression)
     {
@@ -22,6 +22,5 @@ internal abstract class BaseQueryProvider : IAsyncQueryProvider
 
     public abstract object Execute(Expression expression);
     public abstract TResult Execute<TResult>(Expression expression);
-    public abstract IAsyncEnumerable<T> ExecuteAsyncEnumerable<T>(Expression expression, CancellationToken cancellationToken);
     public abstract IEnumerable<T> ExecuteEnumerable<T>(Expression expression);
 }

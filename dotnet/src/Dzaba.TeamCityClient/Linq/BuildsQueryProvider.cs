@@ -77,13 +77,6 @@ internal sealed class BuildsQueryProvider : BaseQueryProvider
         throw new NotImplementedException();
     }
 
-    public override IAsyncEnumerable<T> ExecuteAsyncEnumerable<T>(Expression expression, CancellationToken cancellationToken)
-    {
-        ArgumentNullException.ThrowIfNull(expression, nameof(expression));
-
-        throw new NotImplementedException();
-    }
-
     public override IEnumerable<T> ExecuteEnumerable<T>(Expression expression)
     {
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
