@@ -1,4 +1,5 @@
-﻿using Dzaba.TeamCityClient.Model;
+﻿using Dzaba.TeamCityClient.Linq;
+using Dzaba.TeamCityClient.Model;
 using Microsoft.Extensions.Logging;
 
 namespace Dzaba.TeamCityClient;
@@ -14,6 +15,13 @@ public interface ITeamCityClientFactory
     /// <param name="options">All options need to create a TeamCity client instance.</param>
     /// <returns>TeamCity client.</returns>
     ITeamCityClient CreateClient(TeamCityClientOptions options);
+
+    /// <summary>
+    /// Creates a LINQ context for provided TeamCity server.
+    /// </summary>
+    /// <param name="options">All options need to create a TeamCity client instance.</param>
+    /// <returns>TeamCity client context.</returns>
+    ITeamCityContext CreateContext(TeamCityClientOptions options);
 }
 
 internal sealed class TeamCityClientFactory : ITeamCityClientFactory
@@ -40,5 +48,10 @@ internal sealed class TeamCityClientFactory : ITeamCityClientFactory
         {
             BaseUrl = options.Url.ToString()
         };
+    }
+
+    public ITeamCityContext CreateContext(TeamCityClientOptions options)
+    {
+        return new TeamCityContext(CreateClient(options));
     }
 }
