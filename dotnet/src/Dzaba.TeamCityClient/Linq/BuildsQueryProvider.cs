@@ -18,12 +18,16 @@ internal sealed class BuildsQueryProvider : BaseQueryProvider
     {
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
 
+        throw new NotImplementedException();
+    }
+
+    private IAsyncEnumerable<Build> ExecuteBuilds(Expression expression)
+    {
         var locator = ParseLocator(expression);
         var fields = ParseFields(expression);
         var itemsPerPage = ParseItemsPerPage(expression);
 
-        var builds = TeamCityPageExpander.GetAllAsync(l => GetBuildsPageAsync(l, fields), locator, itemsPerPage);
-        return builds.ToArrayAsync().Result;
+        return TeamCityPageExpander.GetAllAsync(l => GetBuildsPageAsync(l, fields), locator, itemsPerPage);
     }
 
     private async IAsyncEnumerable<Build> GetBuildsPageAsync(Locator locator, string fields)
@@ -45,11 +49,16 @@ internal sealed class BuildsQueryProvider : BaseQueryProvider
         var visitor = new BuildsExpressionVisitor();
         visitor.Visit(expression);
 
-        var props = visitor.Members
-            .Select(PropWithName.FromJsonProperty)
-            .Where(p => !string.IsNullOrWhiteSpace(p.Name));
+        if (visitor.Members.Any())
+        {
+            var props = visitor.Members
+                .Select(PropWithName.FromJsonProperty)
+                .Where(p => !string.IsNullOrWhiteSpace(p.Name));
 
-        return $"build({Fields.BuildFieldsString(props)})";
+            return $"build({Fields.BuildFieldsString(props)})";
+        }
+
+        return $"build({Fields.GetSimpleFields<Build>()})";
     }
 
     private Locator ParseLocator(Expression expression)
@@ -66,5 +75,21 @@ internal sealed class BuildsQueryProvider : BaseQueryProvider
         ArgumentNullException.ThrowIfNull(expression, nameof(expression));
 
         throw new NotImplementedException();
+    }
+
+    public override IAsyncEnumerable<T> ExecuteAsyncEnumerable<T>(Expression expression, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(expression, nameof(expression));
+
+        throw new NotImplementedException();
+    }
+
+    public override IEnumerable<T> ExecuteEnumerable<T>(Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression, nameof(expression));
+
+        var builds = ExecuteBuilds(expression).ToArrayAsync().Result;
+        //return builds.AsQueryable().Provider.CreateQuery<T>(expression);
+        return builds.Cast<T>();
     }
 }

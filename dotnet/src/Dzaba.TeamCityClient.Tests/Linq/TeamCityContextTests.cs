@@ -42,7 +42,7 @@ public class TeamCityContextTests
     public void Builds_WhenToArray_ThenAllBuilds()
     {
         var client = SetupClient();
-        client.Setup(x => x.GetAllBuildsAsync(It.IsAny<string>(), It.IsAny<string>()))
+        client.Setup(x => x.GetAllBuildsAsync(It.IsAny<string>(), $"build({Fields.GetSimpleFields<Build>()})"))
             .ReturnsAsync(new Builds
             {
                 Count = 10,
@@ -61,11 +61,11 @@ public class TeamCityContextTests
     public void Builds_WhenSimpleSelect_ThenProperties()
     {
         var client = SetupClient();
-        client.Setup(x => x.GetAllBuildsAsync(It.IsAny<string>(), It.IsAny<string>()))
+        client.Setup(x => x.GetAllBuildsAsync(It.IsAny<string>(), "build(id,status)"))
             .ReturnsAsync(new Builds
             {
-                Count = 0,
-                Build = []
+                Count = 10,
+                Build = Enumerable.Range(0, 10).Select(i => GetBuild(i)).ToArray()
             });
 
         var sut = CreateSut();
