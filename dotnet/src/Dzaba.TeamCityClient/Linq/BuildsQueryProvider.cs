@@ -49,16 +49,46 @@ internal sealed class BuildsQueryProvider : BaseQueryProvider
         var visitor = new BuildsExpressionVisitor();
         visitor.Visit(expression);
 
-        if (visitor.Members.Any())
-        {
-            var props = visitor.Members
-                .Select(PropWithName.FromJsonProperty)
-                .Where(p => !string.IsNullOrWhiteSpace(p.Name));
+        var root = visitor.MemberRoots
+            .Where(r => r.Type == typeof(Build))
+            .ToArray();
 
-            return $"build({Fields.BuildFieldsString(props)})";
+        if (root.Any())
+        {
+            if (root.Length > 1)
+            {
+                throw new InvalidOperationException("Multiple Build found.");
+            }
+
+            return $"build({ParseFields(root[0], visitor)})";
         }
 
         return $"build({Fields.GetSimpleFields<Build>()})";
+    }
+
+    private string ParseFields(ParameterExpression root, BuildsExpressionVisitor visitor)
+    {
+        var children = visitor.GetChildren(root);
+
+        var items = children
+            .Select(e => ParseFields(e, visitor));
+        return string.Join(',', items);
+    }
+
+    private string ParseFields(MemberExpression member, BuildsExpressionVisitor visitor)
+    {
+        var children = visitor.GetChildren(member).ToArray();
+        var prop = PropWithName.FromJsonProperty(member.Member);
+
+        if (children.Any())
+        {
+            var items = children
+                .Select(e => ParseFields(e, visitor));
+            var fields = string.Join(",", items);
+            return $"{prop.Name}({fields})";
+        }
+
+        return prop.Name;
     }
 
     private Locator ParseLocator(Expression expression)
