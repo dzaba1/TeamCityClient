@@ -1,5 +1,4 @@
-﻿using Dzaba.TeamCityClient.Policy;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Dzaba.TeamCityClient;
 
@@ -16,7 +15,6 @@ public static class Bootstrapper
     {
         ArgumentNullException.ThrowIfNull(services, nameof(services));
 
-        services.AddTransient<IHttpPolicyBuilder, HttpPolicyBuilder>();
         services.AddSingleton<ITeamCityHttpClientManager, TeamCityHttpClientManager>();
         services.AddTransient<ITeamCityClientFactory, TeamCityClientFactory>();
     }

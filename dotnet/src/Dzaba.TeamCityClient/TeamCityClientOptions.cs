@@ -1,6 +1,4 @@
-﻿using Dzaba.TeamCityClient.Policy;
-
-namespace Dzaba.TeamCityClient;
+﻿namespace Dzaba.TeamCityClient;
 
 /// <summary>
 /// All options need to create a TeamCity client instance.
@@ -18,12 +16,8 @@ public sealed class TeamCityClientOptions
     public string Token { get; set; }
 
     /// <summary>
-    /// HTTP retry policy.
+    /// Gets or sets the instance of <see cref="HttpClient"/> used to send HTTP requests and receive HTTP responses.
     /// </summary>
-    public PolicySettings Policy { get; set; } = new PolicySettings
-    {
-        RetryCount = 2,
-        RetryWait = TimeSpan.FromSeconds(3),
-    };
+    public HttpClient HttpClient { get; set; }
 }
 

@@ -31,12 +31,20 @@ internal sealed class TeamCityClientFactory : ITeamCityClientFactory
         this.loggerFactory = loggerFactory;
     }
 
+    private HttpClient GetHttpClient(TeamCityClientOptions options)
+    {
+        if (options.HttpClient is not null)
+        {
+            return options.HttpClient;
+        }
+        return httpClientManager.GetClient();
+    }
+
     public ITeamCityClient CreateClient(TeamCityClientOptions options)
     {
-        ArgumentNullException.ThrowIfNull(options, nameof(options));
+        ArgumentNullException.ThrowIfNull(options);
 
-        var httpClient = httpClientManager.GetClient(options.Policy, options.Url);
-        return new Model.TeamCityClient(httpClient, loggerFactory.CreateLogger<Model.TeamCityClient>(), options.Token)
+        return new Model.TeamCityClient(GetHttpClient(options), loggerFactory.CreateLogger<Model.TeamCityClient>(), options.Token)
         {
             BaseUrl = options.Url.ToString()
         };
