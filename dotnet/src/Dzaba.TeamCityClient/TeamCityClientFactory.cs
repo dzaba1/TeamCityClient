@@ -1,5 +1,4 @@
 ﻿using Dzaba.TeamCityClient.Model;
-using Microsoft.Extensions.Logging;
 
 namespace Dzaba.TeamCityClient;
 
@@ -19,16 +18,12 @@ public interface ITeamCityClientFactory
 internal sealed class TeamCityClientFactory : ITeamCityClientFactory
 {
     private readonly ITeamCityHttpClientManager httpClientManager;
-    private readonly ILoggerFactory loggerFactory;
 
-    public TeamCityClientFactory(ITeamCityHttpClientManager httpClientManager,
-        ILoggerFactory loggerFactory)
+    public TeamCityClientFactory(ITeamCityHttpClientManager httpClientManager)
     {
-        ArgumentNullException.ThrowIfNull(httpClientManager, nameof(httpClientManager));
-        ArgumentNullException.ThrowIfNull(loggerFactory, nameof(loggerFactory));
+        ArgumentNullException.ThrowIfNull(httpClientManager);
 
         this.httpClientManager = httpClientManager;
-        this.loggerFactory = loggerFactory;
     }
 
     private HttpClient GetHttpClient(TeamCityClientOptions options)
@@ -44,7 +39,7 @@ internal sealed class TeamCityClientFactory : ITeamCityClientFactory
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        return new Model.TeamCityClient(GetHttpClient(options), loggerFactory.CreateLogger<Model.TeamCityClient>(), options.Token)
+        return new Model.TeamCityClient(GetHttpClient(options), options.Token)
         {
             BaseUrl = options.Url.ToString()
         };
