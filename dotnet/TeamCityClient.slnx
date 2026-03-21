@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../.github/workflows/dotnet.yml" />
+    <File Path="Directory.Packages.props" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="src/Dzaba.TeamCityClient.Tests/Dzaba.TeamCityClient.Tests.csproj" />
+  <Project Path="src/Dzaba.TeamCityClient/Dzaba.TeamCityClient.csproj" />
+</Solution>
