@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using Newtonsoft.Json;
 using NUnit.Framework;
+using System.Text.Json.Serialization;
 
 namespace Dzaba.TeamCityClient.Tests;
 
@@ -17,19 +17,19 @@ public class FieldsTest
 
     private class MyModel
     {
-        [JsonProperty("int")]
+        [JsonPropertyName("int")]
         public int Int { get; set; }
 
-        [JsonProperty("nullableInt")]
+        [JsonPropertyName("nullableInt")]
         public int? NullableInt { get; set; }
 
-        [JsonProperty("string")]
+        [JsonPropertyName("string")]
         public string String { get; set; }
 
-        [JsonProperty("enum")]
+        [JsonPropertyName("enum")]
         public DayOfWeek Enum { get; set; }
 
-        [JsonProperty("nullableEnum")]
+        [JsonPropertyName("nullableEnum")]
         public DayOfWeek? NullableEnum { get; set; }
     }
 }

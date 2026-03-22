@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace Dzaba.TeamCityClient.Model;
+namespace Dzaba.TeamCityClient;
 
 /// <summary>
 /// TeamCity client implementation.

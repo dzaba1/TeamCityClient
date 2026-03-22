@@ -1,6 +1,4 @@
-﻿using Dzaba.TeamCityClient.Model;
-
-namespace Dzaba.TeamCityClient;
+﻿namespace Dzaba.TeamCityClient;
 
 /// <summary>
 /// TeamCity client factory.
@@ -39,7 +37,7 @@ internal sealed class TeamCityClientFactory : ITeamCityClientFactory
     {
         ArgumentNullException.ThrowIfNull(options);
 
-        return new Model.TeamCityClient(GetHttpClient(options), options.Token)
+        return new TeamCityClient(GetHttpClient(options), options.Token)
         {
             BaseUrl = options.Url.ToString()
         };

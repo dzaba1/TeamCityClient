@@ -1,5 +1,4 @@
-﻿using Dzaba.TeamCityClient.Model;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace Dzaba.TeamCityClient.Tests;

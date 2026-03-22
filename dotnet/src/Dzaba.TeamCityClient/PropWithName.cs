@@ -1,5 +1,5 @@
-﻿using Newtonsoft.Json;
-using System.Reflection;
+﻿using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Dzaba.TeamCityClient;
 
@@ -21,7 +21,7 @@ internal record PropWithName
     {
         ArgumentNullException.ThrowIfNull(property, nameof(property));
 
-        var attr = property.GetCustomAttribute<JsonPropertyAttribute>();
-        return new PropWithName(property, attr?.PropertyName);
+        var attr = property.GetCustomAttribute<JsonPropertyNameAttribute>();
+        return new PropWithName(property, attr?.Name);
     }
 }

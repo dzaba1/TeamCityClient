@@ -1,0 +1,14 @@
+services:
+  teamcity-server:
+    image: jetbrains/teamcity-server:2025.11.3
+    container_name: teamcity-server
+    ports:
+      - 8111:8111
+    environment:
+      - TEAMCITY_SERVER_MEM_OPTS=-Xmx2g -XX:ReservedCodeCacheSize=350m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8111/login.html"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s

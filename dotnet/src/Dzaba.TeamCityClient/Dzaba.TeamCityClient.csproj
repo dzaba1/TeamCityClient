@@ -9,6 +9,9 @@
     <Description>TeamCity HTTP API client library</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>TeamCity</PackageTags>
+    <SkipNSwag Condition="'$(SkipNSwagger)' == ''">false</SkipNSwag>
+    <NSwagExeOS Condition="'$(OS)' == 'Windows_NT'">$(NSwagExe)</NSwagExeOS>
+    <NSwagExeOS Condition="'$(OS)' != 'Windows_NT'">$(NSwagExe_Net100)</NSwagExeOS>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,9 +24,19 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="NSwag.MSBuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Linq.Async" />
   </ItemGroup>
+
+  <!-- Try to generate the code only once. Consider the .NET 10 as a default one-->
+  <Target Name="NSwag" BeforeTargets="BeforeBuild;CoreCompile" Condition="'$(TargetFramework)' == 'net10.0' and '$(SkipNSwag)' != 'true'">
+    <Error Condition="'$(NSwagExeOS)' == ''" Text="NSwag executable could not be determined for this platform. Ensure the NSwag.MSBuild package is properly restored." />
+    <DownloadFile SourceUrl="http://localhost:8111/app/rest/swagger.json" DestinationFolder="$(MSBuildProjectDirectory)" DestinationFileName="swagger.json" />
+    <Exec Command="$(NSwagExeOS) openapi2csclient /input:swagger.json /namespace:Dzaba.TeamCityClient /classname:TeamCityClient /jsonLibrary:SystemTextJson /generateClientInterfaces:true /operationGenerationMode:SingleClientFromOperationId /exposeJsonSerializerSettings:true /output:TeamCityClient.cs" />
+  </Target>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

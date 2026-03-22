@@ -24,7 +24,7 @@ public class ResolveTests
     }
 
     [TestCase(typeof(ITeamCityClientFactory))]
-    public void GetRequiredService_WhenTypeProvided_ThenServiceIsResolved(Type serviceType)
+    public void GetRequiredService_WhenTypeProvided_ThenServiceIsResolved(System.Type serviceType)
     {
         using var container = CreateContainer();
         var service = container.GetRequiredService(serviceType);

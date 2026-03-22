@@ -1,4 +1,4 @@
-﻿namespace Dzaba.TeamCityClient.Model;
+﻿namespace Dzaba.TeamCityClient;
 
 /// <summary>
 /// Common build statuses.

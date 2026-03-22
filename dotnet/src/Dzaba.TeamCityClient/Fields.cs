@@ -20,7 +20,7 @@ public static class Fields
                 var prop = (PropertyInfo)p.Property;
                 var typeToTest = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
 
-                var typeCode = Type.GetTypeCode(typeToTest);
+                var typeCode = System.Type.GetTypeCode(typeToTest);
                 return typeCode != TypeCode.Object;
             });
 
