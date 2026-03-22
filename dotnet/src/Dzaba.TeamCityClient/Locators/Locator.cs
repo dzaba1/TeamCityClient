@@ -1,39 +1,23 @@
-﻿namespace Dzaba.TeamCityClient
+﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Dzaba.TeamCityClient.Locators
 {
     /// <summary>
     /// Base locator class helper.
     /// </summary>
-    public class Locator
+    public class Locator : IReadOnlyDictionary<string, object>
     {
-        private readonly Dictionary<string, object> dict;
-        private readonly StringComparer keyComparer;
+        internal static readonly StringComparer DefaultKeyComparer = StringComparer.Ordinal;
+
+        private Dictionary<string, object> dict;
 
         /// <summary>
         /// Ctor
         /// </summary>
         public Locator()
-            : this(StringComparer.Ordinal)
         {
-
-        }
-
-        /// <summary>
-        /// Ctor
-        /// </summary>
-        /// <param name="keyComparer">Comparer used for field names</param>
-        public Locator(StringComparer keyComparer)
-        {
-            ArgumentNullException.ThrowIfNull(keyComparer, nameof(keyComparer));
-
-            this.keyComparer = keyComparer;
-            dict = new Dictionary<string, object>(keyComparer);
-        }
-
-        internal Locator(Dictionary<string, object> dict)
-        {
-            ArgumentNullException.ThrowIfNull(dict, nameof(dict));
-
-            this.dict = dict;
+            dict = new Dictionary<string, object>(DefaultKeyComparer);
         }
 
         /// <summary>
@@ -74,20 +58,40 @@
             return string.Join(",", entries);
         }
 
-        /// <summary>
-        /// Deep copy of locator fields and values.
-        /// </summary>
-        /// <returns>Deep copy of locator fields and values.</returns>
-        public Locator Copy()
+        internal void SetDict(Dictionary<string, object> copyDict)
         {
-            var copyDict = dict.ToDictionary(k => k.Key, k => k.Value, keyComparer);
-            return new Locator(copyDict);
+            ArgumentNullException.ThrowIfNull(copyDict);
+
+            dict = copyDict;
+        }
+
+        /// <inheritdoc/>
+        public bool ContainsKey(string key)
+        {
+            return dict.ContainsKey(key);
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetValue(string key, [MaybeNullWhen(false)] out object value)
+        {
+            return dict.TryGetValue(key, out value);
+        }
+
+        /// <inheritdoc/>
+        public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
+        {
+            return dict.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return dict.GetEnumerator();
         }
 
         /// <summary>
         /// Page count
         /// </summary>
-        public int? Count
+        public int? PageCount
         {
             get => GetStruct<int>("count");
             set => this["count"] = value;
@@ -96,10 +100,19 @@
         /// <summary>
         /// Page start
         /// </summary>
-        public int? Start
+        public int? PageStart
         {
             get => GetStruct<int>("start");
             set => this["start"] = value;
         }
+
+        /// <inheritdoc/>
+        public IEnumerable<string> Keys => dict.Keys;
+
+        /// <inheritdoc/>
+        public IEnumerable<object> Values => dict.Values;
+
+        /// <inheritdoc/>
+        public int Count => dict.Count;
     }
 }

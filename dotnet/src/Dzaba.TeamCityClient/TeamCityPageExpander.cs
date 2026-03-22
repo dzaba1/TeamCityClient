@@ -1,4 +1,6 @@
-﻿namespace Dzaba.TeamCityClient;
+﻿using Dzaba.TeamCityClient.Locators;
+
+namespace Dzaba.TeamCityClient;
 
 /// <summary>
 /// General one-page request.
@@ -13,9 +15,11 @@ public delegate IAsyncEnumerable<T> PagedRequestAsync<out T>(int start, int item
 /// General one-page request with TeamCity locator.
 /// </summary>
 /// <typeparam name="T">Response type</typeparam>
+/// <typeparam name="TLocator">Locator type</typeparam>
 /// <param name="locator">Locator object</param>
 /// <returns>Items returned in a page</returns>
-public delegate IAsyncEnumerable<T> LocatorPagedRequestAsync<out T>(Locator locator);
+public delegate IAsyncEnumerable<T> LocatorPagedRequestAsync<TLocator, out T>(TLocator locator)
+    where TLocator : Locator, new();
 
 /// <summary>
 /// Helper methods for getting all pages from TeamCity requests.
@@ -65,11 +69,13 @@ public static class TeamCityPageExpander
     /// Enumerates all items from paging request.
     /// </summary>
     /// <typeparam name="T">Response type.</typeparam>
+    /// <typeparam name="TLocator">Locator type.</typeparam>
     /// <param name="request">One-page request handler.</param>
     /// <param name="baseLocator">Base locator object.</param>
     /// <param name="itemsPerPage">Page count.</param>
     /// <returns>Async enumerable of all items.</returns>
-    public static IAsyncEnumerable<T> GetAllAsync<T>(LocatorPagedRequestAsync<T> request, Locator baseLocator, int itemsPerPage)
+    public static IAsyncEnumerable<T> GetAllAsync<T, TLocator>(LocatorPagedRequestAsync<TLocator, T> request, TLocator baseLocator, int itemsPerPage)
+        where TLocator : Locator, new()
     {
         ArgumentNullException.ThrowIfNull(request, nameof(request));
         ArgumentNullException.ThrowIfNull(baseLocator, nameof(baseLocator));
@@ -77,8 +83,8 @@ public static class TeamCityPageExpander
         return GetAllAsync((s, m) =>
         {
             var locator = baseLocator.Copy();
-            locator.Count = m;
-            locator.Start = s;
+            locator.PageCount = m;
+            locator.PageStart = s;
 
             return request(locator);
         }, itemsPerPage);

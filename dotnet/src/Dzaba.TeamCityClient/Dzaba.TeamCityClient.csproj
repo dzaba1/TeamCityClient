@@ -9,7 +9,7 @@
     <Description>TeamCity HTTP API client library</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>TeamCity</PackageTags>
-    <SkipNSwag Condition="'$(SkipNSwagger)' == ''">false</SkipNSwag>
+    <GenerateNSwag Condition="'$(GenerateNSwag)' == ''">false</GenerateNSwag>
     <NSwagExeOS Condition="'$(OS)' == 'Windows_NT'">$(NSwagExe)</NSwagExeOS>
     <NSwagExeOS Condition="'$(OS)' != 'Windows_NT'">$(NSwagExe_Net100)</NSwagExeOS>
   </PropertyGroup>
@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <!-- Try to generate the code only once. Consider the .NET 10 as a default one-->
-  <Target Name="NSwag" BeforeTargets="BeforeBuild;CoreCompile" Condition="'$(TargetFramework)' == 'net10.0' and '$(SkipNSwag)' != 'true'">
+  <Target Name="NSwag" BeforeTargets="BeforeBuild;CoreCompile" Condition="'$(TargetFramework)' == 'net10.0' and '$(GenerateNSwag)' == 'true'">
     <Error Condition="'$(NSwagExeOS)' == ''" Text="NSwag executable could not be determined for this platform. Ensure the NSwag.MSBuild package is properly restored." />
     <DownloadFile SourceUrl="http://localhost:8111/app/rest/swagger.json" DestinationFolder="$(MSBuildProjectDirectory)" DestinationFileName="swagger.json" />
     <Exec Command="$(NSwagExeOS) openapi2csclient /input:swagger.json /namespace:Dzaba.TeamCityClient /classname:TeamCityClient /jsonLibrary:SystemTextJson /generateClientInterfaces:true /operationGenerationMode:SingleClientFromOperationId /exposeJsonSerializerSettings:true /output:TeamCityClient.cs" />

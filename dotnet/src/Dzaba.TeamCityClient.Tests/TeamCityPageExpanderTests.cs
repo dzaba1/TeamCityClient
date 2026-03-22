@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Dzaba.TeamCityClient.Locators;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace Dzaba.TeamCityClient.Tests;
@@ -17,7 +18,7 @@ public class TeamCityPageExpanderTests
             callCount++;
             if (callCount == 1)
             {
-                return Enumerable.Range(0, l.Count.Value).ToAsyncEnumerable();
+                return Enumerable.Range(0, l.PageCount.Value).ToAsyncEnumerable();
             }
             if (callCount == 2)
             {
