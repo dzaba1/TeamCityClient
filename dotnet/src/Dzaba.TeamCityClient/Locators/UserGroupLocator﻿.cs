@@ -10,7 +10,7 @@ public class UserGroupLocator﻿ : Locator
     /// </summary>
     public string Key
     {
-        get => this["key"] as string;
+        get => Get<string>("key");
         set => this["key"] = value;
     }
 
@@ -19,7 +19,7 @@ public class UserGroupLocator﻿ : Locator
     /// </summary>
     public string Name
     {
-        get => this["name"] as string;
+        get => Get<string>("name");
         set => this["name"] = value;
     }
 }

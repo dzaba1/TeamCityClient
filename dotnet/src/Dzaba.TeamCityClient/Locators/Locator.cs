@@ -20,15 +20,23 @@ namespace Dzaba.TeamCityClient.Locators
             dict = new Dictionary<string, object>(DefaultKeyComparer);
         }
 
-        /// <summary>
-        /// Returns a current field value.
-        /// </summary>
-        /// <param name="key">Field name</param>
-        /// <returns>Field value. Null when value is not specified.</returns>
+        /// <inheritdoc/>
         public object this[string key]
         {
             get => dict.GetValueOrDefault(key);
             set => dict[key] = value;
+        }
+
+        /// <summary>
+        /// Returns a current field value as reference type.
+        /// </summary>
+        /// <typeparam name="T">Value type</typeparam>
+        /// <param name="key">Field name</param>
+        /// <returns>Field value. Null when value is not specified.</returns>
+        protected T Get<T>(string key)
+            where T : class
+        {
+            return dict.GetValueOrDefault(key) as T;
         }
 
         /// <summary>
@@ -37,7 +45,7 @@ namespace Dzaba.TeamCityClient.Locators
         /// <typeparam name="T">Value type</typeparam>
         /// <param name="key">Field name</param>
         /// <returns>Field value. Null when value is not specified.</returns>
-        public T? GetStruct<T>(string key)
+        protected T? GetStruct<T>(string key)
             where T : struct
         {
             var value = this[key];
@@ -48,13 +56,23 @@ namespace Dzaba.TeamCityClient.Locators
             return (T)value;
         }
 
+        private string GetValueString(object value)
+        {
+            if (value is Locator locatorValue)
+            {
+                return $"({locatorValue})";
+            }
+
+            return value.ToString();
+        }
+
         /// <summary>
         /// Builds the locator string.
         /// </summary>
         /// <returns>Locator string.</returns>
         public override string ToString()
         {
-            var entries = dict.Select(k => $"{k.Key}:{k.Value}");
+            var entries = dict.Where(k => k.Value != null).Select(k => $"{k.Key}:{GetValueString(k.Value)}");
             return string.Join(",", entries);
         }
 
