@@ -28,6 +28,6 @@ public class UserLocatorTests
         sut.Role = "Reader";
 
         var result = sut.ToString();
-        result.Should().Be("affectedGroup:(name:AffectedGroupName,key:AffectedGroupKey),email:test@test.com,group:(name:GroupName,key:GroupKey),lastLogin:01.06.2024 12:00:00 +00:00,property:(name:Email,value:test,matchType:contains),role:Reader");
+        result.Should().Be("affectedGroup:(name:AffectedGroupName,key:AffectedGroupKey),email:test@test.com,group:(name:GroupName,key:GroupKey),lastLogin:20240601T120000+0000,property:(name:Email,value:test,matchType:contains),role:Reader");
     }
 }

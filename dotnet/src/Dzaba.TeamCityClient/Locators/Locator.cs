@@ -63,6 +63,11 @@ namespace Dzaba.TeamCityClient.Locators
                 return $"({locatorValue})";
             }
 
+            if (value is DateTimeOffset dateTimeOffset)
+            {
+                return TeamCityDateTimeConverter.ToString(dateTimeOffset);
+            }
+
             return value.ToString();
         }
 
