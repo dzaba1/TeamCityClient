@@ -5,7 +5,7 @@ namespace Dzaba.TeamCityClient;
 
 internal record PropWithName
 {
-    public PropWithName(MemberInfo property, string name)
+    public PropWithName(PropertyInfo property, string name)
     {
         ArgumentNullException.ThrowIfNull(property, nameof(property));
 
@@ -13,11 +13,11 @@ internal record PropWithName
         Name = name;
     }
 
-    public MemberInfo Property { get; }
+    public PropertyInfo Property { get; }
 
     public string Name { get; }
 
-    public static PropWithName FromJsonProperty(MemberInfo property)
+    public static PropWithName FromJsonProperty(PropertyInfo property)
     {
         ArgumentNullException.ThrowIfNull(property, nameof(property));
 

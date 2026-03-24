@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace Dzaba.TeamCityClient;
+﻿namespace Dzaba.TeamCityClient;
 
 /// <summary>
 /// Helper methods for getting fields to locators.
@@ -10,31 +8,57 @@ public static class Fields
     /// <summary>
     /// Gets all simple fields from an object. Simple here means non-complex object types excluding string. So value types plus string.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
-    public static string GetSimpleFields<T>() where T : class
+    /// <typeparam name="T">Type</typeparam>
+    /// <returns>Enumerable of strings</returns>
+    public static IEnumerable<string> EnumerateSimpleFields<T>() where T : class
     {
-        var props = GetProps<T>()
+        return EnumerateSimpleFields(typeof(T));
+    }
+
+    /// <summary>
+    /// Gets all simple fields from an object. Simple here means non-complex object types excluding string. So value types plus string.
+    /// </summary>
+    /// <param name="type">Type</param>
+    /// <returns>Enumerable of strings</returns>
+    public static IEnumerable<string> EnumerateSimpleFields(System.Type type)
+    {
+        ArgumentNullException.ThrowIfNull(type, nameof(type));
+
+        var props = GetProps(type)
             .Where(p =>
             {
-                var prop = (PropertyInfo)p.Property;
-                var typeToTest = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                var typeToTest = Nullable.GetUnderlyingType(p.Property.PropertyType) ?? p.Property.PropertyType;
 
                 var typeCode = System.Type.GetTypeCode(typeToTest);
                 return typeCode != TypeCode.Object;
             });
 
-        return string.Join(",", props.Select(p => p.Name));
+        return props.Select(p => p.Name);
     }
 
-    internal static string BuildFieldsString(IEnumerable<PropWithName> props)
+    /// <summary>
+    /// Gets all simple fields from an object. Simple here means non-complex object types excluding string. So value types plus string.
+    /// </summary>
+    /// <typeparam name="T">Type</typeparam>
+    /// <returns>Comma separated string</returns>
+    public static string GetSimpleFields<T>() where T : class
     {
-        return string.Join(",", props.Select(p => p.Name));
+        return string.Join(",", EnumerateSimpleFields<T>());
     }
 
-    private static IEnumerable<PropWithName> GetProps<T>()
+    /// <summary>
+    /// Gets all simple fields from an object. Simple here means non-complex object types excluding string. So value types plus string.
+    /// </summary>
+    /// <param name="type">Type</param>
+    /// <returns>Comma separated string</returns>
+    public static string GetSimpleFields(System.Type type)
     {
-        return typeof(T)
+        return string.Join(",", EnumerateSimpleFields(type));
+    }
+
+    private static IEnumerable<PropWithName> GetProps(System.Type type)
+    {
+        return type
             .GetProperties()
             .Select(PropWithName.FromJsonProperty)
             .Where(p => !string.IsNullOrWhiteSpace(p.Name));
