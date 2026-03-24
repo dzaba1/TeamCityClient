@@ -1,4 +1,6 @@
-﻿namespace Dzaba.TeamCityClient;
+﻿using Microsoft.Extensions.Logging;
+
+namespace Dzaba.TeamCityClient;
 
 internal interface ITeamCityHttpClientManager : IDisposable
 {
@@ -8,10 +10,19 @@ internal interface ITeamCityHttpClientManager : IDisposable
 internal sealed class TeamCityHttpClientManager : ITeamCityHttpClientManager
 {
     private readonly Lazy<HttpClient> httpClient;
+    private readonly ILoggerFactory loggerFactory;
 
-    public TeamCityHttpClientManager()
+    public TeamCityHttpClientManager(ILoggerFactory loggerFactory)
     {
-        httpClient = new Lazy<HttpClient>(() => new HttpClient());
+        ArgumentNullException.ThrowIfNull(loggerFactory);
+
+        this.loggerFactory = loggerFactory;
+        httpClient = new Lazy<HttpClient>(CreateHttpClient);
+    }
+
+    private HttpClient CreateHttpClient()
+    {
+        return new HttpClient(new LoggingHandler(loggerFactory.CreateLogger<LoggingHandler>()));
     }
 
     public void Dispose()
