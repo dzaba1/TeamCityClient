@@ -11,7 +11,7 @@ public static class TeamCityClientExtensions
     /// <param name="client"></param>
     /// <param name="locator"></param>
     /// <returns>successful operation</returns>
-    public static async Task DeleteGroupAsync(this ITeamCityClient client, UserGroupLocator locator)
+    public static async Task DeleteGroupAsync(this ITeamCityClient client, Locators.UserGroupLocator locator)
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(locator);
@@ -26,7 +26,7 @@ public static class TeamCityClientExtensions
     /// <param name="locator"></param>
     /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
     /// <returns>successful operation</returns>
-    public static async Task DeleteGroupAsync(this ITeamCityClient client, UserGroupLocator locator, CancellationToken cancellationToken)
+    public static async Task DeleteGroupAsync(this ITeamCityClient client, Locators.UserGroupLocator locator, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(locator);
