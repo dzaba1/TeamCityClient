@@ -6,7 +6,8 @@ namespace Dzaba.TeamCityClient.Locators;
 /// <summary>
 /// Locator property for filtering entities by their properties. It supports various match types, such as existence, equality, string matching, and version comparison.
 /// </summary>
-public class LocatorProperty
+public class LocatorProperty<T>
+    where T : Enum
 {
     /// <summary>
     /// Ctor
@@ -14,7 +15,7 @@ public class LocatorProperty
     /// <param name="name"></param>
     /// <param name="value"></param>
     /// <param name="matchType"></param>
-    public LocatorProperty(string name, string value, LocatorPropertyType matchType)
+    public LocatorProperty(string name, string value, T matchType)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
@@ -36,12 +37,13 @@ public class LocatorProperty
     /// <summary>
     /// Match type
     /// </summary>
-    public LocatorPropertyType MatchType { get; }
+    public T MatchType { get; }
 
     /// <inheritdoc />
     public override string ToString()
     {
-        var memberInfo = MatchType.GetType().GetMember(MatchType.ToString()).First();
+        // GetField, because GetMember("Equals") also matches the inherited object.Equals methods
+        var memberInfo = typeof(T).GetField(MatchType.ToString());
         var matchTypeStr = memberInfo.GetCustomAttribute<EnumMemberAttribute>().Value;
         return $"(name:{Name},value:{Value},matchType:{matchTypeStr})";
     }

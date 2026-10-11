@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace Dzaba.TeamCityClient.Locators
 {
@@ -71,6 +73,20 @@ namespace Dzaba.TeamCityClient.Locators
             if (value is DateTimeOffset dateTimeOffset)
             {
                 return TeamCityDateTimeConverter.ToString(dateTimeOffset);
+            }
+
+            if (value is bool boolValue)
+            {
+                return boolValue ? "true" : "false";
+            }
+
+            if (value is Enum enumValue)
+            {
+                var enumMember = value.GetType().GetField(enumValue.ToString())?.GetCustomAttribute<EnumMemberAttribute>();
+                if (enumMember?.Value != null)
+                {
+                    return enumMember.Value;
+                }
             }
 
             return value.ToString();

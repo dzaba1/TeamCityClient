@@ -24,7 +24,7 @@ public class UserLocatorTests
             Key = "GroupKey"
         };
         sut.LastLogin = new DateTimeOffset(2024, 6, 1, 12, 0, 0, TimeSpan.Zero);
-        sut.Property = new LocatorProperty(nameof(Dzaba.TeamCityClient.Locators.UserLocator.Email), "test", LocatorPropertyType.Contains);
+        sut.Property = new LocatorProperty<LocatorPropertyType>(nameof(Dzaba.TeamCityClient.Locators.UserLocator.Email), "test", LocatorPropertyType.Contains);
         sut.Role = "Reader";
 
         var result = sut.ToString();

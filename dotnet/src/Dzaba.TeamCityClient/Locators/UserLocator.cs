@@ -73,9 +73,9 @@ public class UserLocator : Locator
     /// <summary>
     /// Property matcher
     /// </summary>
-    public LocatorProperty Property
+    public LocatorProperty<LocatorPropertyType> Property
     {
-        get => Get<LocatorProperty>("property");
+        get => Get<LocatorProperty<LocatorPropertyType>>("property");
         set => this["property"] = value;
     }
 
