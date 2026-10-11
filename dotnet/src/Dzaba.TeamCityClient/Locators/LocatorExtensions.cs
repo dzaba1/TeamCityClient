@@ -15,7 +15,7 @@ public static class LocatorExtensions
 
         var dict = locator.ToDictionary(k => k.Key, k => k.Value, Locator.DefaultKeyComparer);
         var copyLocator = new T();
-        locator.SetDict(dict);
-        return locator;
+        copyLocator.SetDict(dict);
+        return copyLocator;
     }
 }
