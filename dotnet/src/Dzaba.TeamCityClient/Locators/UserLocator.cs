@@ -2,6 +2,7 @@
 
 /// <summary>
 /// Represents a locator for filtering User entities.
+/// Reference: https://www.jetbrains.com/help/teamcity/rest/userlocator.htmlhttps://www.jetbrains.com/help/teamcity/rest/userlocator.html
 /// </summary>
 public class UserLocator : Locator
 {

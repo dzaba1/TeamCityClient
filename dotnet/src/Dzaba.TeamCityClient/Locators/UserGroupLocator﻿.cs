@@ -1,9 +1,10 @@
 ﻿namespace Dzaba.TeamCityClient.Locators;
 
 /// <summary>
-/// Represents a locator string for filtering Group entities
+/// Represents a locator string for filtering Group entities.
+/// Reference: https://www.jetbrains.com/help/teamcity/rest/usergrouplocator.html
 /// </summary>
-public class UserGroupLocator﻿ : Locator
+public class UserGroupLocator : Locator
 {
     /// <summary>
     /// User group key
