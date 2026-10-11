@@ -77,8 +77,19 @@ namespace Dzaba.TeamCityClient.Locators
         /// <returns>Locator string.</returns>
         public override string ToString()
         {
-            var entries = dict.Where(k => k.Value != null).Select(k => $"{k.Key}:{GetValueString(k.Value)}");
+            var entries = dict.Where(k => k.Value != null).SelectMany(k => GetEntries(k.Key, k.Value));
             return string.Join(",", entries);
+        }
+
+        private IEnumerable<string> GetEntries(string key, object value)
+        {
+            // A collection of locators is emitted as a repeated dimension: key:(l1),key:(l2)
+            if (value is IEnumerable<Locator> locators)
+            {
+                return locators.Select(l => $"{key}:{GetValueString(l)}");
+            }
+
+            return [$"{key}:{GetValueString(value)}"];
         }
 
         internal void SetDict(Dictionary<string, object> copyDict)
