@@ -10,6 +10,11 @@ namespace Dzaba.TeamCityClient.Locators
     {
         internal static readonly StringComparer DefaultKeyComparer = StringComparer.Ordinal;
 
+        /// <summary>
+        /// Name of the dimension that is written as a bare value, e.g. <c>current</c> instead of <c>$singleValue:current</c>.
+        /// </summary>
+        protected const string SingleValueKey = "$singleValue";
+
         private Dictionary<string, object> dict;
 
         /// <summary>
@@ -87,6 +92,12 @@ namespace Dzaba.TeamCityClient.Locators
             if (value is IEnumerable<Locator> locators)
             {
                 return locators.Select(l => $"{key}:{GetValueString(l)}");
+            }
+
+            // The single value dimension is written as a bare value, without the dimension name
+            if (key == SingleValueKey)
+            {
+                return [GetValueString(value)];
             }
 
             return [$"{key}:{GetValueString(value)}"];

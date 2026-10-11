@@ -30,4 +30,15 @@ public class UserLocatorTests
         var result = sut.ToString();
         result.Should().Be("affectedGroup:(name:AffectedGroupName,key:AffectedGroupKey),email:test@test.com,group:(name:GroupName,key:GroupKey),lastLogin:20240601T120000+0000,property:(name:Email,value:test,matchType:contains),role:Reader");
     }
+
+    [Test]
+    public void ToString_WhenSingleValueIsSet_ThenItIsWrittenWithoutDimensionName()
+    {
+        var sut = new Dzaba.TeamCityClient.Locators.UserLocator
+        {
+            SingleValue = "current"
+        };
+
+        sut.ToString().Should().Be("current");
+    }
 }

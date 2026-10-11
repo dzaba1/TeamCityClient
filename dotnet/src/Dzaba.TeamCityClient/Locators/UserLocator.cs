@@ -7,6 +7,16 @@
 public class UserLocator : Locator
 {
     /// <summary>
+    /// Single value: username, or <c>current</c> for the current user.
+    /// Written as a bare value, without the dimension name.
+    /// </summary>
+    public string SingleValue
+    {
+        get => Get<string>(SingleValueKey);
+        set => this[SingleValueKey] = value;
+    }
+
+    /// <summary>
     /// User group (direct or indirect parent) locator, includes the user considering group hierarchy.
     /// </summary>
     public UserGroupLocator AffectedGroup
