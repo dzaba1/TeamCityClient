@@ -1,6 +1,6 @@
 services:
   teamcity-server:
-    image: jetbrains/teamcity-server:2025.11.3
+    image: jetbrains/teamcity-server:2026.2.1
     container_name: teamcity-server
     ports:
       - 8111:8111
